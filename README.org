@@ -8,33 +8,27 @@ After copying this config you need to install ~use-package~ via ~M-x package-ins
 Some initial necessary shit
 #+begin_src emacs-lisp
   (menu-bar-mode -1)                    ; Le classique
-  (tool-bar-mode nil)                   ; Le classique
+  (tool-bar-mode -1)                   ; Le classique
   (scroll-bar-mode -1)                  ; Le classique
   (global-display-line-numbers-mode 1)  ; Display numbers on lines
   (windmove-default-keybindings)        ; thing for moving around windows
-  (ns-toggle-toolbar)                   ; Fuck fucking toolbar 
   (setq-default  cursor-type 'bar)      ; No comments ;)
   (global-hl-line-mode t)               ; highlight for current line
 
   (set-face-attribute 'default nil :family "JetBrainsMono Nerd Font")
-  (set-face-attribute 'default nil :height 160)
+  (set-face-attribute 'default nil :height 120)
 #+end_src
 
 * For enabling ~melpa~ 
 #+begin_src emacs-lisp
-(require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/"))
+  (require 'package)
+  (add-to-list 'package-archives
+	       '("melpa" . "https://melpa.org/packages/")
+	       '("melpa-stable" . "http://stable.melpa.org/packages/"))
 #+end_src
 
 * Language stuff
 #+begin_src emacs-lisp
-  ;; Swift
-  (use-package swift-mode
-    :ensure t)
-  (use-package lsp-sourcekit
-    :config
-    (setq lsp-sourcekit-executable "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp"))
   ;; Rust
   (use-package rust-mode
     :config
@@ -85,53 +79,54 @@ Some initial necessary shit
 ~Documentation for ef-themes~: https://protesilaos.com/emacs/ef-themes#h:ac76ded0-af9b-4566-aff9-75142ef2d4ef
 #+begin_src emacs-lisp
   ;; ef-themes (from modus author)
-  (use-package ef-themes
+  ;;  (use-package ef-themes							 ;;
+  ;;    :config									 ;;
+  ;;    (setq ef-themes-mixed-fonts t						 ;;
+  ;; 	 ef-themes-variable-pitch-ui t						 ;;
+  ;; 	 ef-themes-headings							 ;;
+  ;; 	 '((0 . (variable-pitch light 1.9))					 ;;
+  ;; 	   (1 . (variable-pitch light 1.8))					 ;;
+  ;; 	   (2 . (variable-pitch regular 1.7))					 ;;
+  ;; 	   (3 . (variable-pitch regular 1.6))					 ;;
+  ;; 	   (4 . (variable-pitch regular 1.5))					 ;;
+  ;; 	   (5 . (variable-pitch 1.4)) ; absence of weight means `bold'		 ;;
+  ;; 	   (6 . (variable-pitch 1.3))						 ;;
+  ;; 	   (7 . (variable-pitch 1.2))						 ;;
+  ;; 	   (t . (variable-pitch 1.1)))))					 ;;
+  ;; 										 ;;
+  ;; ;;  Doom themes								 ;;
+  (use-package doom-themes
     :config
-    (setq ef-themes-mixed-fonts t
-	  ef-themes-variable-pitch-ui t
-	  ef-themes-headings
-	  '((0 . (variable-pitch light 1.9))
-	    (1 . (variable-pitch light 1.8))
-	    (2 . (variable-pitch regular 1.7))
-	    (3 . (variable-pitch regular 1.6))
-	    (4 . (variable-pitch regular 1.5))
-	    (5 . (variable-pitch 1.4)) ; absence of weight means `bold'
-	    (6 . (variable-pitch 1.3))
-	    (7 . (variable-pitch 1.2))
-	    (t . (variable-pitch 1.1)))))
+    (setq doom-themes-enable-bold t
+	  doom-themes-enable-italic t)
+    (load-theme 'doom-dracula t)
+    (doom-themes-visual-bell-config)
+    (setq doom-themes-treemacs-theme "doom-atom") 
+    (doom-themes-treemacs-config)
+    (doom-themes-org-config))
 
-  ;; Doom themes
-  ;;   (use-package doom-themes
-  ;;     :config
-  ;;     (setq doom-themes-enable-bold t
-  ;;	     doom-themes-enable-italic t)
-  ;;     ;; (load-theme 'doom-Iosvkem t)
-  ;;     (doom-themes-visual-bell-config)
-  ;;     (setq doom-themes-treemacs-theme "doom-atom") 
-  ;;     (doom-themes-treemacs-config)
-  ;;     (doom-themes-org-config))
+  ;; (defun my/apply-theme (appearance)
+  ;;   "Load theme, taking current system APPEARANCE into consideration."
+  ;;   (mapc #'disable-theme custom-enabled-themes)
+  ;;   (pcase appearance
+  ;; 	('light (load-theme 'ef-summer t))
+  ;; 	('dark (load-theme 'ef-winter t))))
 
-     (defun my/apply-theme (appearance)
-       "Load theme, taking current system APPEARANCE into consideration."
-       (mapc #'disable-theme custom-enabled-themes)
-       (pcase appearance
-	 ('light (load-theme 'ef-summer t))
-	 ('dark (load-theme 'ef-winter t))))
+  ;; (add-hook 'ns-system-appearance-change-functions #'my/apply-
+  ;; theme)
 
-     (add-hook 'ns-system-appearance-change-functions #'my/apply-theme)
-
-     ;; Doom modeline
-     (use-package doom-modeline
-       :init (doom-modeline-mode)
-       :custom
-       ;; (doom-modeline-major-mode-icon t)
-       (doom-modeline-major-mode-color-icon nil)
-       (doom-modeline-icon (display-graphic-p))
-       (doom-modeline-buffer-modification-icon t)
-       (doom-modeline-flycheck-icon t)
-       (doom-modeline-checker-simple-format t)
-       (doom-modeline-buffer-encoding t)
-       (doom-modeline-height 30))
+  ;; Doom modeline
+  (use-package doom-modeline
+    :init (doom-modeline-mode)
+    :custom
+    ;; (doom-modeline-major-mode-icon t)
+    (doom-modeline-major-mode-color-icon nil)
+    (doom-modeline-icon (display-graphic-p))
+    (doom-modeline-buffer-modification-icon t)
+    (doom-modeline-flycheck-icon t)
+    (doom-modeline-checker-simple-format t)
+    (doom-modeline-buffer-encoding t)
+    (doom-modeline-height 30))
 
   (use-package all-the-icons
     :ensure t)
@@ -167,8 +162,8 @@ Some initial necessary shit
     :hook (company-mode . company-box-mode))
 
   (use-package which-key
-     :config
-     (which-key-mode))
+    :config
+    (which-key-mode))
 
   (use-package vterm
     :commands vterm
@@ -181,7 +176,7 @@ Some initial necessary shit
 
 Some list:
 - [ ] Some entry
- - [ ] jskfjdk   
+ - [X] jskfjdk   
 #+begin_src emacs-lisp
   '(org-hide-emphasis-markers t)
 
